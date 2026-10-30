@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>نظام عُمان الاستثماري</title>
+  
+  <!-- ربط ملف الـ Manifest لتمكين التثبيت كتطبيق -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#0f172a">
+
+  <!-- إعدادات تطبيقات الآيفون (iOS Web App Native Feel) -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="استثمار عُمان">
+  <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/512/ledger.png">
+  <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/512/ledger.png">
+
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Cairo', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      background: #0f172a;
+      overflow: hidden;
+      position: fixed;
+      inset: 0;
+      overscroll-behavior: none;
+    }
+
+    /* شاشة التحميل المبدئية حتى يستجيب سيرفر جوجل */
+    #app-loader {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      color: #f8fafc;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+    #app-loader.loaded {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .spinner {
+      width: 46px;
+      height: 46px;
+      border: 4px solid rgba(37, 99, 235, 0.2);
+      border-top-color: #2563eb;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin-bottom: 14px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* إطار النظام يملأ الشاشة بالكامل */
+    iframe {
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      border: none;
+      display: block;
+      background: #0f172a;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- مؤشر التحميل الأولي -->
+  <div id="app-loader">
+    <div class="spinner"></div>
+    <div style="font-size: 0.95rem; font-weight: 800; color: #38bdf8;">نظام عُمان الاستثماري</div>
+    <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 4px;">جاري الاتصال الآمن بالخادم...</div>
+  </div>
+
+  <!-- استدعاء رابط نشر Google Apps Script الخاص بك مع منح صلاحيات الكاميرا والملفات -->
+  <iframe 
+    id="gas-frame"
+    src="https://script.google.com/macros/s/AKfycbwnsjsfIpGqMiRwxK1tjWY6bobRSXj4uglh4b3uDz2KELZTqT4fL-LDjKIHozNHs9TmCQ/exec"
+    allow="camera *; microphone *; clipboard-write *; fullscreen *"
+    onload="document.getElementById('app-loader').classList.add('loaded');">
+  </iframe>
+
+  <script>
+    // تسجيل الـ Service Worker لتفعيل التثبيت كتطبيق مستقل (PWA)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('./sw.js').catch(function() {});
+      });
+    }
+  </script>
+
+</body>
+</html>
